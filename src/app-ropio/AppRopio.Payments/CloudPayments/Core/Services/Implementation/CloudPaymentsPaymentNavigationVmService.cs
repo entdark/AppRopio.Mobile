@@ -42,7 +42,7 @@ namespace AppRopio.Payments.CloudPayments.Core.Services.Implementation
             if (paymentToken == null)
                 return;
 
-            var paymentResult = await vmService.PayWithApplePay(paymentToken, paymentInfo.Amount, paymentInfo.Currency, bundle.OrderId);
+            var paymentResult = await vmService.PayWithApplePay(paymentToken, paymentInfo, bundle.OrderId);
             if (paymentResult.Succeeded)
             {
                 await paymentsVmService.OrderPaid(bundle.OrderId);

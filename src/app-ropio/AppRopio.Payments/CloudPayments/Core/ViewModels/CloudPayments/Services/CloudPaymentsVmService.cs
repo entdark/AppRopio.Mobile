@@ -46,28 +46,28 @@ namespace AppRopio.Payments.CloudPayments.Core.ViewModels.CloudPayments.Services
             return info;
         }
 
-        public Task<PaymentResult> PayWithCard(string cardNumber, string expirateDate, string cvv, string cardHolderName, decimal amount, string currency, Action threeDSCallback, string orderId)
+        public Task<PaymentResult> PayWithCard(string cardNumber, string expirateDate, string cvv, string cardHolderName, PaymentOrderInfo paymentInfo, Action threeDSCallback, string orderId)
         {
             var cryptogram = Service.CreateCryptogramPacket(cardNumber, expirateDate, cvv, CloudPaymentsConstants.PUBLIC_KEY, Config.StoreId);
 
-            return ProcessPayment(cryptogram, amount, currency, cardHolderName, threeDSCallback, orderId);
+            return ProcessPayment(cryptogram, paymentInfo, cardHolderName, threeDSCallback, orderId);
         }
 
-        public Task<PaymentResult> PayWithApplePay(string token, decimal amount, string currency, string orderId)
+        public Task<PaymentResult> PayWithApplePay(string token, PaymentOrderInfo paymentInfo, string orderId)
         {
-            return ProcessPayment(token, amount, currency, null, null, orderId);
+            return ProcessPayment(token, paymentInfo, null, null, orderId);
         }
 
-        private async Task<PaymentResult> ProcessPayment(string cryptogram, decimal amount, string currency, string cardHolderName, Action threeDSCallback, string orderId)
+        private async Task<PaymentResult> ProcessPayment(string cryptogram, PaymentOrderInfo paymentInfo, string cardHolderName, Action threeDSCallback, string orderId)
         {
 			try
 			{
                 Response<ChargeResponse> chargeResult = null;
 
                 if (Config.MessageScheme == MessageSchemeType.Single)
-                    chargeResult = await Service.Charge(cryptogram, amount, currency, cardHolderName, Config.StoreId, Config.ApiSecret, orderId);
+                    chargeResult = await Service.Charge(cryptogram, paymentInfo, cardHolderName, Config.StoreId, Config.ApiSecret, orderId);
                 else if (Config.MessageScheme == MessageSchemeType.Dual)
-                    chargeResult = await Service.Auth(cryptogram, amount, currency, cardHolderName, Config.StoreId, Config.ApiSecret, orderId);
+                    chargeResult = await Service.Auth(cryptogram, paymentInfo, cardHolderName, Config.StoreId, Config.ApiSecret, orderId);
                 
                 if (chargeResult.Success)
                     return new PaymentResult { Succeeded = true };

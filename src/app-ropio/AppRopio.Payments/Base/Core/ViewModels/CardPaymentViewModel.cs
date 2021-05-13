@@ -154,7 +154,7 @@ namespace AppRopio.Payments.Core.ViewModels
         {
             Loading = true;
 
-            var paymentResult = await VmService.PayWithCard(CardNumber.Without(' '), ExpirationDate, Cvv, CardHolder, paymentInfo.Amount, paymentInfo.Currency, () =>
+            var paymentResult = await VmService.PayWithCard(CardNumber.Without(' '), ExpirationDate, Cvv, CardHolder, paymentInfo, () =>
             {
                 Loading = false;
             }, OrderId);

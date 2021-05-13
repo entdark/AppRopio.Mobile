@@ -9,6 +9,6 @@ namespace AppRopio.Payments.Core.ViewModels.Services
     {
         Task<PaymentOrderInfo> GetPaymentInfo(string orderId);
 
-        Task<PaymentResult> PayWithCard(string cardNumber, string expirateDate, string cvv, string cardHolderName, decimal amount, string currency, Action threeDSCallback, string orderId);
+        Task<PaymentResult> PayWithCard(string cardNumber, string expirateDate, string cvv, string cardHolderName, PaymentOrderInfo paymentInfo, Action threeDSCallback, string orderId);
     }
 }

@@ -4,6 +4,8 @@ using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using AppRopio.Models.Payments.Responses;
+using AppRopio.Payments.CloudPayments.API.Models;
 using AppRopio.Payments.CloudPayments.API.Requests;
 using AppRopio.Payments.CloudPayments.API.Responses;
 using Newtonsoft.Json;
@@ -18,33 +20,45 @@ namespace AppRopio.Payments.CloudPayments.API.Services.Implementation
         protected const string AUTH = "cards/auth";
 		protected const string POST_3DS = "mobile/cards/post3ds";
 
-        public async Task<Response<ChargeResponse>> Charge(string cardCryptogram, decimal amount, string currency, string name, string publicId, string apiSecret, string orderId)
+        public async Task<Response<ChargeResponse>> Charge(string cardCryptogram, PaymentOrderInfo paymentInfo, string name, string publicId, string apiSecret, string orderId)
         {
             var httpClient = new HttpClient();
 
             var request = new ChargeRequest()
             {
                 CardCryptogramPacket = cardCryptogram,
-                Amount = amount,
-                Currency = currency,
+                Amount = paymentInfo.Amount,
+                Currency = paymentInfo.Currency,
                 Name = name,
-                InvoceId = orderId
+                InvoceId = orderId,
+                Email = paymentInfo.CustomerEmail,
+                Payer = new Payer()
+                {
+                    FirstName = paymentInfo.CustomerFirstName,
+                    LastName = paymentInfo.CustomerLastName
+                }
             };
 
             return await Post<Response<ChargeResponse>>(CHARGE, ToStringContent(request), publicId, apiSecret);
         }
 
-        public async Task<Response<ChargeResponse>> Auth(string cardCryptogram, decimal amount, string currency, string name, string publicId, string apiSecret, string orderId)
+        public async Task<Response<ChargeResponse>> Auth(string cardCryptogram, PaymentOrderInfo paymentInfo, string name, string publicId, string apiSecret, string orderId)
         {
             var httpClient = new HttpClient();
 
             var request = new ChargeRequest()
             {
                 CardCryptogramPacket = cardCryptogram,
-                Amount = amount,
-                Currency = currency,
+                Amount = paymentInfo.Amount,
+                Currency = paymentInfo.Currency,
                 Name = name,
-                InvoceId = orderId
+                InvoceId = orderId,
+                Email = paymentInfo.CustomerEmail,
+                Payer = new Payer()
+                {
+                    FirstName = paymentInfo.CustomerFirstName,
+                    LastName = paymentInfo.CustomerLastName
+                }
             };
 
             return await Post<Response<ChargeResponse>>(AUTH, ToStringContent(request), publicId, apiSecret);

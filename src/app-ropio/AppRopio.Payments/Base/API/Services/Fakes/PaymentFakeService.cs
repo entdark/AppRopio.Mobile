@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using AppRopio.Models.Payments.Responses;
 
@@ -13,6 +12,8 @@ namespace AppRopio.Payments.API.Services.Fake
             Currency = "RUB",
             CustomerPhone = "+79211231231",
             CustomerEmail = "a@a.com",
+            CustomerFirstName = "Firtname",
+            CustomerLastName = "Lastname",
             Items = new List<PaymentOrderItem> 
             {
 				new PaymentOrderItem
